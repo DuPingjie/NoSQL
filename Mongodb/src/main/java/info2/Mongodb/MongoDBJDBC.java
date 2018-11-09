@@ -30,6 +30,7 @@ public class MongoDBJDBC{
          players.createIndex(Indexes.ascending("name"));
          teams.createIndex(Indexes.ascending("name"));
          players.createIndex(Indexes.ascending("name"));
+         mongoDatabase.drop();
       }catch(Exception e){
         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
      }
