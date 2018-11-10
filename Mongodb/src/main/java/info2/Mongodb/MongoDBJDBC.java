@@ -54,7 +54,8 @@ public class MongoDBJDBC{
            	           System.out.println(mongoCursor.next());  
                   }   
            	      
-       	      //Insert 10 teams
+       	     
+         //Insert 10 teams
               List<Document> documents_teams = new ArrayList<Document>();   
               List<String> colors=new ArrayList<String>();
         	  colors.add("red");
@@ -70,13 +71,13 @@ public class MongoDBJDBC{
             	  }
             		  Document document = new Document("team name", "team_"+String.valueOf(i+1)).           	  
                	      append("color", colors.get(i/2)).  
-               	      append("players", players.find(new BasicDBObject("$or",conList)).projection(Projections.include("_id")));  
+               	      append("team players", players.find(new BasicDBObject("$or",conList)).projection(Projections.include("_id")));  
             	  documents_teams.add(document);
               }      
               teams.insertMany(documents_teams);  
               System.out.println("Teams are inserted successfully!");  
               
-            //Print Teams
+            //print documents
        	      FindIterable<Document> findIterable1 = teams.find();
        	      MongoCursor<Document> mongoCursor1 = findIterable1.iterator();  
        	      while(mongoCursor1.hasNext()){  
