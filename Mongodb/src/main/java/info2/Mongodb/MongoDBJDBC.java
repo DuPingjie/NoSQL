@@ -12,6 +12,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.Projections;
 
@@ -46,7 +47,7 @@ public class MongoDBJDBC{
               List<Document> documents_players = new ArrayList<Document>();   
               for(int i=0;i<110;i++){
             	  Document document = new Document("last name", "nom_"+String.valueOf(i+1)).  
-               	   append("first name", "prenom_"+String.valueOf(i+1)).  
+               	   append("first name", "prenom_"+String.valueOf(i)).  
                           append("birthday", "2005-10-18").  
                  	   append("size", String.valueOf(170+i/10.0)).
                  	   append("weight", String.valueOf(70+i/10.0)).
@@ -85,7 +86,7 @@ public class MongoDBJDBC{
               teams.insertMany(documents_teams);  
               System.out.println("Teams are inserted successfully!");  
               
-              //Print teams
+              //Print documents
        	      FindIterable<Document> findIterable1 = teams.find();
        	      MongoCursor<Document> mongoCursor1 = findIterable1.iterator();  
        	      while(mongoCursor1.hasNext()){  
@@ -105,7 +106,8 @@ public class MongoDBJDBC{
             	  }
             	  homeplayersscore.append(homeplayers.get(homeplayers.size()-1).toString(), "2");
             	  extplayersscore.append(extplayers.get(homeplayers.size()-1).toString(), "3");
-            	  
+            	  System.out.println(extplayers.get(homeplayers.size()-1).toString());
+
             	  Document document = new Document("hometeam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+1))).projection(Projections.include("_id")).first()).  
                	   append("extteam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+2))).projection(Projections.include("_id")).first()).  
                           append("competition", "World Cup").  
@@ -124,8 +126,21 @@ public class MongoDBJDBC{
            	      while(mongoCursor2.hasNext()){  
            	           System.out.println(mongoCursor2.next());  
                   }   
+           	  
+           	 //request of selection
            	      
-              mongoDatabase.drop();    
+           	 FindIterable<Document> result1=players.find(
+           			 Filters.and(
+           					 Filters.eq("post","right"),
+           					 Filters.lt("age", 25)
+           					 )
+           			 );
+           	MongoCursor<Document> result1C = result1.iterator();  
+           	System.out.println("=================");
+     	      while(result1C.hasNext()){  
+     	           System.out.println(result1C.next());  
+            }   
+           	 mongoDatabase.drop();    
          
            }catch(Exception e){
              System.err.println( e.getClass().getName() + ": " + e.getMessage() );
