@@ -47,7 +47,7 @@ public class MongoDBJDBC{
               for(int i=0;i<110;i++){
             	  Document document = new Document("last name", "nom_"+String.valueOf(i+1)).  
                	   append("first name", "prenom_"+String.valueOf(i)).  
-                        append("birthday", "2005-10-18").  
+                          append("birthday", "2005-10-18").  
                  	   append("size", String.valueOf(170+i/10.0)).
                  	   append("weight", String.valueOf(70+i/10.0)).
                  	   append("post", "right");  
@@ -108,7 +108,7 @@ public class MongoDBJDBC{
             	  
             	  Document document = new Document("hometeam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+1))).projection(Projections.include("_id")).first()).  
                	   append("extteam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+2))).projection(Projections.include("_id")).first()).  
-                        append("competition", "World Cup").  
+                          append("competition", "World Cup").  
                  	   append("homescore", "2").
                  	   append("extscore", "3").
                  	   append("homeplayersscore:", homeplayersscore).
