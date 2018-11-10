@@ -30,7 +30,30 @@ public class MongoDBJDBC{
          players.createIndex(Indexes.ascending("name"));
          teams.createIndex(Indexes.ascending("name"));
          players.createIndex(Indexes.ascending("name"));
+         
+         //Insert players
+              List<Document> documents_players = new ArrayList<Document>();   
+              for(int i=0;i<110;i++){
+            	  Document document = new Document("name", "nom_"+String.valueOf(i+1)).  
+               	       append("first name", "prenom_"+String.valueOf(i)).  
+               	       append("birthday", "2005-10-18").  
+                 	   append("size", "19"+String.valueOf(i/10.0)).
+                 	   append("weight", "8"+String.valueOf(i/10.0)).
+                 	   append("post", "right");  
+            	  documents_players.add(document);
+              }            	   
+               	  players.insertMany(documents_players);  
+                  System.out.println("文档插入成功");  
+               
+               //print documents
+       	      FindIterable<Document> findIterable = players.find();  
+       	      MongoCursor<Document> mongoCursor = findIterable.iterator();  
+       	      while(mongoCursor.hasNext()){  
+       	           System.out.println(mongoCursor.next());  
+              }    
+         
          mongoDatabase.drop();
+         
       }catch(Exception e){
         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
      }
