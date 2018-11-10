@@ -33,7 +33,7 @@ public class MongoDBJDBC{
               teams.createIndex(Indexes.ascending("team name"));
               players.createIndex(Indexes.ascending("name"));
            
-              //Insert players
+              //Insert 110 players
               List<Document> documents_players = new ArrayList<Document>();   
               for(int i=0;i<110;i++){
             	  Document document = new Document("last name", "nom_"+String.valueOf(i+1)).  
@@ -46,13 +46,15 @@ public class MongoDBJDBC{
               }            	   
                	players.insertMany(documents_players);  
                   System.out.println("Players are inserted successfully!");  
+         
+               //Print players
                   FindIterable<Document> findIterable = players.find();  
            	      MongoCursor<Document> mongoCursor = findIterable.iterator();  
            	      while(mongoCursor.hasNext()){  
            	           System.out.println(mongoCursor.next());  
                   }   
            	      
-       	      //Insert teams
+       	      //Insert 10 teams
               List<Document> documents_teams = new ArrayList<Document>();   
               List<String> colors=new ArrayList<String>();
         	  colors.add("red");
@@ -81,8 +83,41 @@ public class MongoDBJDBC{
        	           System.out.println(mongoCursor1.next());  
               }   
        	      
-              mongoDatabase.drop();
+            //Insert 5 matches
+              List<Document> documents_matches = new ArrayList<Document>();   
+              for(int i=0;i<5;i++){
+            	  Document homeplayersscore=new Document();
+            	  Document extplayersscore=new Document();
+            	  List<Document> homeplayers=(List<Document>) teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+1))).projection(Projections.include("team players")).first().get("team players");
+            	  List<Document> extplayers=(List<Document>)  teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+2))).projection(Projections.include("team players")).first().get("team players");
+            	  for(int j=0;j<homeplayers.size()-1;j++){
+            		  homeplayersscore.append(homeplayers.get(j).toString(), "0");
+            		  extplayersscore.append(extplayers.get(j).toString(), "0");
+            	  }
+            	  homeplayersscore.append(homeplayers.get(homeplayers.size()-1).toString(), "2");
+            	  extplayersscore.append(extplayers.get(homeplayers.size()-1).toString(), "3");
+            	  
+            	  Document document = new Document("hometeam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+1))).projection(Projections.include("_id")).first()).  
+               	       append("extteam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+2))).projection(Projections.include("_id")).first()).  
+               	       append("competition", "World Cup").  
+                 	   append("homescore", "2").
+                 	   append("extscore", "3").
+                 	   append("homeplayersscore:", homeplayersscore).
+                 	   append("extplayersscore", extplayersscore);  
+            	  documents_matches.add(document);
+              }            	   
+               	matches.insertMany(documents_matches);  
+                  System.out.println("Mathes are inserted successfully!");  
+                  
+                  //Print Matches
+                  FindIterable<Document> findIterable2 = matches.find();  
+           	      MongoCursor<Document> mongoCursor2 = findIterable2.iterator();  
+           	      while(mongoCursor2.hasNext()){  
+           	           System.out.println(mongoCursor2.next());  
+                  }   
               
+         
+         mongoDatabase.drop();     
            }catch(Exception e){
              System.err.println( e.getClass().getName() + ": " + e.getMessage() );
           }
