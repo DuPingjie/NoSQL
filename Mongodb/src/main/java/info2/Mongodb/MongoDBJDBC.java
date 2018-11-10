@@ -51,7 +51,7 @@ public class MongoDBJDBC{
        	      while(mongoCursor.hasNext()){  
        	           System.out.println(mongoCursor.next());  
               }    
-         
+         players.find(new BasicDBObject("name","nom_1")).projection(Projections.include("_id")).first();
          mongoDatabase.drop();
          
       }catch(Exception e){
