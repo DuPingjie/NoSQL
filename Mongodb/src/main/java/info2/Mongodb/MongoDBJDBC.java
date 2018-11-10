@@ -32,13 +32,13 @@ public class MongoDBJDBC{
               players.createIndex(Indexes.ascending("last name"));
               teams.createIndex(Indexes.ascending("team name"));
               players.createIndex(Indexes.ascending("name"));
-           
+         
               //Insert 110 players
               List<Document> documents_players = new ArrayList<Document>();   
               for(int i=0;i<110;i++){
             	  Document document = new Document("last name", "nom_"+String.valueOf(i+1)).  
-               	       append("first name", "prenom_"+String.valueOf(i)).  
-               	       append("birthday", "2005-10-18").  
+               	   append("first name", "prenom_"+String.valueOf(i)).  
+                     append("birthday", "2005-10-18").  
                  	   append("size", String.valueOf(170+i/10.0)).
                  	   append("weight", String.valueOf(70+i/10.0)).
                  	   append("post", "right");  
@@ -47,22 +47,21 @@ public class MongoDBJDBC{
                	players.insertMany(documents_players);  
                   System.out.println("Players are inserted successfully!");  
          
-               //Print players
+              //Print players
                   FindIterable<Document> findIterable = players.find();  
            	      MongoCursor<Document> mongoCursor = findIterable.iterator();  
            	      while(mongoCursor.hasNext()){  
            	           System.out.println(mongoCursor.next());  
                   }   
            	      
-       	     
-         //Insert 10 teams
+       	     //Insert 10 teams
               List<Document> documents_teams = new ArrayList<Document>();   
               List<String> colors=new ArrayList<String>();
-        	  colors.add("red");
-        	  colors.add("blue");
-        	  colors.add("yellow");
-        	  colors.add("green");
-        	  colors.add("white");
+        	     colors.add("red");
+        	     colors.add("blue");
+        	     colors.add("yellow");
+        	     colors.add("green");
+        	     colors.add("white");
         	 
               for(int i=0;i<10;i++){
             	  BasicDBList conList=new BasicDBList();
@@ -72,19 +71,19 @@ public class MongoDBJDBC{
             		  Document document = new Document("team name", "team_"+String.valueOf(i+1)).           	  
                	      append("color", colors.get(i/2)).  
                	      append("team players", players.find(new BasicDBObject("$or",conList)).projection(Projections.include("_id")));  
-            	  documents_teams.add(document);
+            	     documents_teams.add(document);
               }      
               teams.insertMany(documents_teams);  
               System.out.println("Teams are inserted successfully!");  
               
-            //print documents
+              //Print documents
        	      FindIterable<Document> findIterable1 = teams.find();
        	      MongoCursor<Document> mongoCursor1 = findIterable1.iterator();  
        	      while(mongoCursor1.hasNext()){  
        	           System.out.println(mongoCursor1.next());  
               }   
        	      
-            //Insert 5 matches
+       	    //Insert 5 matches
               List<Document> documents_matches = new ArrayList<Document>();   
               for(int i=0;i<5;i++){
             	  Document homeplayersscore=new Document();
@@ -99,8 +98,8 @@ public class MongoDBJDBC{
             	  extplayersscore.append(extplayers.get(homeplayers.size()-1).toString(), "3");
             	  
             	  Document document = new Document("hometeam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+1))).projection(Projections.include("_id")).first()).  
-               	       append("extteam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+2))).projection(Projections.include("_id")).first()).  
-               	       append("competition", "World Cup").  
+               	   append("extteam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+2))).projection(Projections.include("_id")).first()).  
+                     append("competition", "World Cup").  
                  	   append("homescore", "2").
                  	   append("extscore", "3").
                  	   append("homeplayersscore:", homeplayersscore).
@@ -116,9 +115,9 @@ public class MongoDBJDBC{
            	      while(mongoCursor2.hasNext()){  
            	           System.out.println(mongoCursor2.next());  
                   }   
-              
+           	      
+              mongoDatabase.drop();    
          
-         mongoDatabase.drop();     
            }catch(Exception e){
              System.err.println( e.getClass().getName() + ": " + e.getMessage() );
           }
