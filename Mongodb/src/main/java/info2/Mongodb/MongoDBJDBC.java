@@ -9,53 +9,82 @@ import com.mongodb.client.model.Indexes;
 public class MongoDBJDBC{
    public static void main( String args[] ){
       try{   
-       // 连接到 mongodb 服务
-         MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
-       
-         // 连接到数据库
-         MongoDatabase mongoDatabase = mongoClient.getDatabase("mydb");  
-         System.out.println("Connect to database successfully");
-         // create collections
-     /*    mongoDatabase.createCollection("players");
-         System.out.println("集合players创建成功");
-         mongoDatabase.createCollection("teams");
-         System.out.println("集合teams创建成功");
-         mongoDatabase.createCollection("matches");
-         System.out.println("集合matches创建成功");
-        */ 
-         MongoCollection<Document> players = mongoDatabase.getCollection("players");
-         MongoCollection<Document> teams = mongoDatabase.getCollection("teams");
-         MongoCollection<Document> matches = mongoDatabase.getCollection("matches");
-         
-         players.createIndex(Indexes.ascending("name"));
-         teams.createIndex(Indexes.ascending("name"));
-         players.createIndex(Indexes.ascending("name"));
-         
-         //Insert players
+        	
+              //Connect to MongoDB
+              MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+            
+              // Connect to database
+              MongoDatabase mongoDatabase = mongoClient.getDatabase("mydb");  
+              System.out.println("Connect to database successfully");
+              
+              // Create collections
+              mongoDatabase.createCollection("players");
+              System.out.println("Collection players is created!");
+              mongoDatabase.createCollection("teams");
+              System.out.println("Collection players is created!");
+              mongoDatabase.createCollection("matches");
+              System.out.println("Collection players is created!");
+             
+              MongoCollection<Document> players = mongoDatabase.getCollection("players");
+              MongoCollection<Document> teams = mongoDatabase.getCollection("teams");
+              MongoCollection<Document> matches = mongoDatabase.getCollection("matches");
+              
+              players.createIndex(Indexes.ascending("last name"));
+              teams.createIndex(Indexes.ascending("team name"));
+              players.createIndex(Indexes.ascending("name"));
+           
+              //Insert players
               List<Document> documents_players = new ArrayList<Document>();   
               for(int i=0;i<110;i++){
-            	  Document document = new Document("name", "nom_"+String.valueOf(i+1)).  
+            	  Document document = new Document("last name", "nom_"+String.valueOf(i+1)).  
                	       append("first name", "prenom_"+String.valueOf(i)).  
                	       append("birthday", "2005-10-18").  
-                 	   append("size", "19"+String.valueOf(i/10.0)).
-                 	   append("weight", "8"+String.valueOf(i/10.0)).
+                 	   append("size", String.valueOf(170+i/10.0)).
+                 	   append("weight", String.valueOf(70+i/10.0)).
                  	   append("post", "right");  
             	  documents_players.add(document);
               }            	   
-               	  players.insertMany(documents_players);  
-                  System.out.println("文档插入成功");  
-               
-               //print documents
-       	      FindIterable<Document> findIterable = players.find();  
-       	      MongoCursor<Document> mongoCursor = findIterable.iterator();  
-       	      while(mongoCursor.hasNext()){  
-       	           System.out.println(mongoCursor.next());  
-              }    
-         players.find(new BasicDBObject("name","nom_1")).projection(Projections.include("_id")).first();
-         mongoDatabase.drop();
-         
-      }catch(Exception e){
-        System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-     }
+               	players.insertMany(documents_players);  
+                  System.out.println("Players are inserted successfully!");  
+                  FindIterable<Document> findIterable = players.find();  
+           	      MongoCursor<Document> mongoCursor = findIterable.iterator();  
+           	      while(mongoCursor.hasNext()){  
+           	           System.out.println(mongoCursor.next());  
+                  }   
+           	      
+       	      //Insert teams
+              List<Document> documents_teams = new ArrayList<Document>();   
+              List<String> colors=new ArrayList<String>();
+        	  colors.add("red");
+        	  colors.add("blue");
+        	  colors.add("yellow");
+        	  colors.add("green");
+        	  colors.add("white");
+        	 
+              for(int i=0;i<10;i++){
+            	  BasicDBList conList=new BasicDBList();
+            	  for(int j=0;j<11;j++){
+            		  conList.add(new BasicDBObject("last name","nom_"+String.valueOf(i*11+j)));
+            	  }
+            		  Document document = new Document("team name", "team_"+String.valueOf(i+1)).           	  
+               	      append("color", colors.get(i/2)).  
+               	      append("players", players.find(new BasicDBObject("$or",conList)).projection(Projections.include("_id")));  
+            	  documents_teams.add(document);
+              }      
+              teams.insertMany(documents_teams);  
+              System.out.println("Teams are inserted successfully!");  
+              
+            //Print Teams
+       	      FindIterable<Document> findIterable1 = teams.find();
+       	      MongoCursor<Document> mongoCursor1 = findIterable1.iterator();  
+       	      while(mongoCursor1.hasNext()){  
+       	           System.out.println(mongoCursor1.next());  
+              }   
+       	      
+              mongoDatabase.drop();
+              
+           }catch(Exception e){
+             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+          }
    }
 }
