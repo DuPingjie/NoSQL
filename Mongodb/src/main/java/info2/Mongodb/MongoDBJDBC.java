@@ -46,7 +46,7 @@ public class MongoDBJDBC{
               List<Document> documents_players = new ArrayList<Document>();   
               for(int i=0;i<110;i++){
             	  Document document = new Document("last name", "nom_"+String.valueOf(i+1)).  
-               	   append("first name", "prenom_"+String.valueOf(i)).  
+               	   append("first name", "prenom_"+String.valueOf(i+1)).  
                           append("birthday", "2005-10-18").  
                  	   append("size", String.valueOf(170+i/10.0)).
                  	   append("weight", String.valueOf(70+i/10.0)).
@@ -85,7 +85,7 @@ public class MongoDBJDBC{
               teams.insertMany(documents_teams);  
               System.out.println("Teams are inserted successfully!");  
               
-              //Print documents
+              //Print teams
        	      FindIterable<Document> findIterable1 = teams.find();
        	      MongoCursor<Document> mongoCursor1 = findIterable1.iterator();  
        	      while(mongoCursor1.hasNext()){  
