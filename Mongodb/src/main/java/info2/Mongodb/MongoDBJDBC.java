@@ -1,10 +1,12 @@
 package info2.Mongodb;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import org.bson.Document;
-
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -27,27 +29,28 @@ public class MongoDBJDBC{
               MongoDatabase mongoDatabase = mongoClient.getDatabase("mydb");  
               System.out.println("Connect to database successfully");
               
-              // Create collection
+              // I. Create collection
               // Model in MongoDb football plyers:
               mongoDatabase.createCollection("players");
               System.out.println("Collection players is created!");
               MongoCollection<Document> players = mongoDatabase.getCollection("players");
+           
               // Model in MongoDb football teams:
               mongoDatabase.createCollection("teams");
               System.out.println("Collection players is created!");
               MongoCollection<Document> teams = mongoDatabase.getCollection("teams");
+           
               // Model in MongoDb football matches:
               mongoDatabase.createCollection("matches");
               System.out.println("Collection players is created!");
               MongoCollection<Document> matches = mongoDatabase.getCollection("matches");
            
-              // Optimization of querie (teams by name, players by name)
+              // II. Optimization of querie (teams by name, players by name)
               players.createIndex(Indexes.ascending("last name"));
               teams.createIndex(Indexes.ascending("team name"));
               players.createIndex(Indexes.ascending("first name"));
-              
-             
-              // Queries of insertion for players, teams and matches 
+                        
+              // III. Queries of insertion for players, teams and matches 
               // Insert 110 players
               Random rand = new Random();      
               List<Document> documents_players = new ArrayList<Document>();               
@@ -136,7 +139,7 @@ public class MongoDBJDBC{
            	           System.out.println(mongoCursor2.next());  
                   }   
            
-              // Queries of selecting the players for a post (Right-back) and a maximum age (25 years old) 
+              // IV. Queries of selecting the players for a post (Right-back) and a maximum age (25 years old) 
            	  int age_max=25;
               String post="Right-back";
               Calendar now = Calendar.getInstance();             
