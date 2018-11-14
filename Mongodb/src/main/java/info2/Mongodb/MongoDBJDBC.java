@@ -59,7 +59,7 @@ public class MongoDBJDBC{
               for(int i=0;i<110;i++){
             	   Document document = new Document("last name", "nom_"+String.valueOf(i+1)).  
                	   append("first name", "prenom_"+String.valueOf(i+1)).  
-                     append("birthday", String.valueOf(rand.nextInt(30)+1973)+"-"+String.format("%02d",rand.nextInt(12)+1)+"-"+String.format("%02d",rand.nextInt(30)+1)).  
+                          append("birthday", String.valueOf(rand.nextInt(30)+1973)+"-"+String.format("%02d",rand.nextInt(12)+1)+"-"+String.format("%02d",rand.nextInt(30)+1)).  
                  	   append("size", String.valueOf(rand.nextInt(70)+150)).
                  	   append("weight", String.valueOf(rand.nextInt(60)+40)).
                  	   append("post", posts.get(post_index));  
@@ -91,7 +91,7 @@ public class MongoDBJDBC{
             	   }
             		    Document document = new Document("team name", "team_"+String.valueOf(i+1)).           	  
                	    append("color", colors.get(i)).  
-                      append("team players", players.find(new BasicDBObject("$or",conList)).projection(Projections.include("_id")));  
+                           append("team players", players.find(new BasicDBObject("$or",conList)).projection(Projections.include("_id")));  
             	   documents_teams.add(document);
                }      
               teams.insertMany(documents_teams);  
