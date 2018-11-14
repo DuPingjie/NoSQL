@@ -140,10 +140,10 @@ public class MongoDBJDBC{
                   }   
            
               // IV. Queries of selecting the players for a post (Right-back) and a maximum age (25 years old) 
-           int age_max=25;
+              int age_max=25;
               String post="Right-back";
               Calendar now = Calendar.getInstance();             
-       String birthday_earliest=(now.get(Calendar.YEAR)-age_max)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH);
+              String birthday_earliest=(now.get(Calendar.YEAR)-age_max)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH);
  
               // Print the results
               FindIterable<Document> result1=players.find(Filters.and(Filters.eq("post", post),Filters.gte("birthday",birthday_earliest)));
