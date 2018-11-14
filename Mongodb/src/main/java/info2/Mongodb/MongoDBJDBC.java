@@ -58,8 +58,8 @@ public class MongoDBJDBC{
         	     int post_index=0;
               for(int i=0;i<110;i++){
             	   Document document = new Document("last name", "nom_"+String.valueOf(i+1)).  
-               	       append("first name", "prenom_"+String.valueOf(i+1)).  
-               	       append("birthday", String.valueOf(rand.nextInt(30)+1973)+"-"+String.format("%02d",rand.nextInt(12)+1)+"-"+String.format("%02d",rand.nextInt(30)+1)).  
+               	   append("first name", "prenom_"+String.valueOf(i+1)).  
+                     append("birthday", String.valueOf(rand.nextInt(30)+1973)+"-"+String.format("%02d",rand.nextInt(12)+1)+"-"+String.format("%02d",rand.nextInt(30)+1)).  
                  	   append("size", String.valueOf(rand.nextInt(70)+150)).
                  	   append("weight", String.valueOf(rand.nextInt(60)+40)).
                  	   append("post", posts.get(post_index));  
@@ -120,8 +120,8 @@ public class MongoDBJDBC{
             	  extplayersscore.append(extplayers.get(homeplayers.size()-1).toString(), "3");
             	  
             	  Document document = new Document("hometeam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+1))).projection(Projections.include("_id")).first()).  
-               	       append("extteam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+2))).projection(Projections.include("_id")).first()).  
-               	       append("competition", "World Cup").  
+               	   append("extteam", teams.find(new BasicDBObject("team name","team_"+String.valueOf(2*i+2))).projection(Projections.include("_id")).first()).  
+               	   append("competition", "World Cup").  
                  	   append("homescore", "2").
                  	   append("extscore", "3").
                  	   append("homeplayersscore:", homeplayersscore).
