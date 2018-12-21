@@ -1,0 +1,169 @@
+						### Cassandra Project : Stockage des données des stations meteo ###
+
+### Lancement du Service Cassandra ###
+
+sudo service cassandra start
+cqlsh
+
+ 
+!!!  On a crée un keyspace avec un facteur de réplication 3 pour que chaque donnée sera sauvegardée 
+     sur 3 noeuds différents en supposant qu'on dispose d'un data center qui contient plusieurs 
+     serveurs afin que nos données ne seront pas perdus.
+
+
+CREATE KEYSPACE meteo WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 };
+
+USE meteo;
+
+### Création de la table ###
+
+CREATE TABLE meteoInput (
+	stationID TEXT, 
+	horodatage TIMESTAMP, 
+	longitude TEXT,
+	latitude TEXT,
+	temperature TEXT,
+	humidite TEXT,
+	PRIMARY KEY (stationID, horodateage));
+	
+
+   !!! 	On a crée la table ( meteoInput ) car il répond a tous les requêtes demandées dans le cahier de charges.
+   	la clé primaire du la table c'est la paire de colonnes (stationID, horodatage).
+   	On suppose que :
+		- les stations meteo peuvent des données simultanément
+		- Une station ne peut pas fournir deux mesures à la même seconde.
+ 
+   	La clé de partition est 'stationID', de type 'TEXT'
+   	La clé de clustering est 'horodatage', de type 'TIMESTAMP' et de format 'AAAA-MM-JJTHH:MM:SSZ'
+   	On a choisi le type 'TEXT' pour les autres données aussi.
+
+### Insertion de données ###
+
+	!!! Voilà les informations fournies par deux stations différentes en même temps
+
+
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM001', '2018-12-12T18:55:10+0000', '5.3467', '50.5795', '10C', '18%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM002', '2018-12-12T18:55:10+0000', '5.3467', '50.5791', '12C', '25%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM001', '2018-12-12T18:59:19+0000', '5.3467', '48.4689', '8C', '30%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM002', '2018-12-12T18:59:19+0000', '5.3467', '45.5523', '7C', '34%')
+
+	!!! Voila des informations fournies par differents station meteo dans differents temps
+
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM002', '2018-12-13T08:32:21+0000', '8.8722', '30.4690', '5C', '25%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM002', '2018-12-13T08:34:21+0000', '8.5738', '33.4758', '6C', '28%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM002', '2018-12-13T08:35:21+0000', '9.8749', '40.8566', '8C', '39%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM001', '2018-12-13T08:36:21+0000', '7.3456', '41.7543', '7C', '44%')
+
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM001', '2018-12-13T08:37:21+0000', '7.4802', '42.4632', '3C', '34%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM002', '2018-12-13T08:40:21+0000', '7.4854', '42.4667', '3C', '56%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM001', '2018-12-13T08:44:21+0000', '6.4568', '43.4632', '10C', '53%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM002', '2018-12-13T09:32:21+0000', '6.4468', '42.4932', '8C', '35%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM001', '2018-12-13T10:32:21+0000', '6.4694', '43.4032', '5C', '29%')
+
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM003', '2018-12-13T10:35:21+0000', '6.4694', '43.4032', '5C', '29%')
+
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM003', '2018-12-13T10:40:21+0000', '7.4694', '45.4032', '6C', '19%')
+
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM003', '2018-12-13T10:55:21+0000', '8.4694', '42.4032', '9C', '27%')
+
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM004', '2018-12-13T07:52:21+0000', '6.3589', '43.4000', '7C', '45%')
+
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM004', '2018-12-13T08:32:21+0000', '6.4846', '45.4032', '8C', '60%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM004', '2018-12-13T09:55:21+0000', '7.6448', '44.4032', '14C', '31%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM004', '2018-12-13T10:44:21+0000', '9.4256', '46.4002', '12C', '48%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM004', '2018-12-13T11:32:24+0000', '9.4234', '43.4853', '6C', '22%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM004', '2018-12-13T11:44:25+0000', '9.4333', '45.4002', '9C', '19%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM004', '2018-12-13T11:50:21+0000', '9.4345', '49.4032', '13C', '18%')
+	
+INSERT INTO meteoInput
+		   (stationID, horodatage, longitude, latitude, temperature, humidite)
+	VALUES ('STM004', '2018-12-13T11:57:21+0000', '9.4253', '47.4039', '17C', '49%')
+	
+	
+### 	Sélection de toutes les mesures de la station STM001   ###
+
+SELECT stationID, 
+	   temperature, 
+	   humidite 
+	FROM meteoInput 
+	WHERE stationID='STM001';
+	
+### 	Sélection de toutes les mesures de la station STM002 avec toutes les informations   ###
+
+SELECT *
+	FROM meteoInput 
+	WHERE stationID='STM002';
+
+### 	Sélection de toutes les mesures de la station STM004 le 13/12/2018 entre 08h00 et 10h00	     ###
+
+SELECT stationID, 
+	   horodatage, 
+	   temperature, 
+	   humidite 
+	FROM meteoInput
+	WHERE stationID = 'STM004'
+	   AND horodatage >= '2018-12-13T08:00:00+0000'
+	   AND horodatage <= '2018-12-13T10:00:00+0000';
+       
+  
