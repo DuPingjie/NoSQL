@@ -1,0 +1,126 @@
+   # Création des noeuds. Nous allons créer deux types de noeud:
+   # Entreprise avec les propriétés nom, secteurActivité, description, taille
+   # Utilisateur avec les propriétés nom, prénom, description, listeCompétences
+   # Nous allons mettre in "index" sur la propriété "nom" pour faciliter la recherche des noeuds. 
+
+CREATE (:Entreprise {nom:"Wordline", secteurActivité:"Service de paiment", description:"Conception des produits pour service de paiment", taille:"+20000"})
+CREATE (:Entreprise {nom:"AfdTech", secteurActivité:"Telecom", description:"Infrastructure", taille:"+10000"})
+CREATE (:Entreprise {nom:"Sopra-Steria", secteurActivité:"Informatique", description:"developpement des sites web", taille:"+15000"})
+CREATE (:Entreprise {nom:"AMARIS", secteurActivité:"IT ", description:"Nouvelles technologies", taille:"+10000"})
+CREATE INDEX ON :Entreprise(nom)
+
+CREATE (:Utilisateur {nom:"Ezzagh", prénom:"Hicham", description:"Marocain", listeCompétences:"Big data"})
+CREATE (:Utilisateur {nom:"Du", prénom:"Pingjie", description:"Chinois ", listeCompétences:dev"})
+CREATE (:Utilisateur {nom:"Di", prénom:"Yang", description:"Chinois", listeCompétences:"Traitement d’image"})
+CREATE (:Utilisateur {nom:"ronaldo", prénom:"Cristiano", description:"Portugal", listeCompétences:"Coup-franc"})
+CREATE (:Utilisateur {nom:"messi", prénom:"Leo", description:"Argentine", listeCompétences:"competencesU02"})
+CREATE (:Utilisateur {nom:"Tissier", prénom:"Julien", description:"France", listeCompétences:"Machine Learning"})
+CREATE (:Utilisateur {nom:"Max", prénom:"Mad", description:"American", listeCompétences:"Action"})
+CREATE (:Utilisateur {nom:"terrase", prénom:"Francois", description:"Defenseur", listeCompétences:"Stoppeur"})
+CREATE (:Utilisateur {nom:"De rossi", prénom:"Daniel", description:"Italie", listeCompétences:"La grinta"})
+CREATE (:Utilisateur {nom:"Bale", prénom:"Gareth", description:"Real Madrid", listeCompétences:"Penalties"})
+CREATE INDEX ON :Utilisateur(nom)
+
+    # Création des relations entre les noeuds : a travaillé pour 
+    # Les données temporelles (du et au) seront stockées sous la forme 'AAAAMMJJ'. Ceci permettra de les comparer entre eux.
+    # Par exemple, le 10 Novembre 2018 = 10/11/2018 sera enregistré comme 20181110
+
+MATCH (u1:Utilisateur {prénom:"Francois"}), 
+	(e1:Entreprise {nom:"Sopra-Steria"})
+MERGE (u1)-[atp:aTravailléPour {du:20180301, au:20180901, enTantQue:"Salarié"}]->(e1);
+
+MATCH (u2:Utilisateur {prénom:"Hicham"}), (e2:Entreprise {nom:"Wordline"})
+MERGE (u2)-[atp:aTravailléPour {du:20180301, au:20180901, enTantQue:"Stagiaire"}]->(e2);
+
+MATCH (u3:Utilisateur {prénom:"Cristiano"}),(e3:Entreprise {nom:"Wordline"})
+MERGE (u3)-[atp:aTravailléPour {du:20161001, au:20191231, enTantQue:"Salarié"}]->(e3);
+
+MATCH (u4:Utilisateur {prénom:"Leo"}),(e4:Entreprise {nom:"Wordline"})
+MERGE (u4)-[atp:aTravailléPour {du:20120515, au:20180815, enTantQue:"Salarié"}]->(e4);
+
+MATCH (u5:Utilisateur {prénom:"Pingjie"}), (e5:Entreprise {nom:"AfdTech"})
+MERGE (u5)-[atp:aTravailléPour {du:20180301, au:20180901, enTantQue:"Stagiaire"}]->(e5);
+
+MATCH (u6:Utilisateur {prénom:"Yang", nom:"Di", description:"Chinois"}), 
+	(e6:Entreprise {nom:"AfdTech", secteurActivité:"Telecom", description:"Infrastructure", taille:"+10000"})
+MERGE (u6)-[atp:aTravailléPour {du:20180301, au:20180901, enTantQue:"Stagiaire"}]->(e6);
+
+MATCH (u7:Utilisateur {prénom:"Julien"}), (e7:Entreprise {nom:"AMARIS"})
+MERGE (u7)-[atp:aTravailléPour {du:20140101, au:20141231, enTantQue:"Sous-traitant"}]->(e7);
+
+MATCH (u8:Utilisateur {prénom:"Mad"}), (e8:Entreprise {nom:"AMARIS"})
+MERGE (u8)-[atp:aTravailléPour {du:20140101, au:20161015, enTantQue:"Salarié"}]->(e8);
+
+MATCH (u9:Utilisateur {prénom:"Daniel"}), (e9:Entreprise {nom:"AMARIS"})
+MERGE (u9)-[atp:aTravailléPour {du:20150501, au:20181226, enTantQue:"Salarié"}]->(e9);
+
+MATCH (u10:Utilisateur {prénom:"Gareth"}), (e10:Entreprise {nom:"AMARIS"})
+MERGE (u10)-[atp:aTravailléPour {du:20170501, au:20190915, enTantQue:"Salarié"}]->(e10);
+
+  # Création des relations entre les noeuds : a travaillé avec 
+
+MATCH (u:Utilisateur {prénom:"Mad"}), (uu:Utilisateur {prénom:"Daniel"})
+MERGE (u)-[:aTravailléAvec]->(uu)
+MERGE (uu)-[:aTravailléAvec]->(u)
+
+MATCH (u:Utilisateur {prénom:"Hicham"}), (uu:Utilisateur {prénom:"Cristiano"})
+MERGE (u)-[:aTravailléAvec]->(uu)
+MERGE (uu)-[:aTravailléAvec]->(u)
+
+    # Création des relations entre les noeuds : connait
+
+MATCH (u:Utilisateur {prénom:"Hicham"}), (uu:Utilisateur {prénom:"Leo"})
+MERGE (u)-[:connait]->(uu)
+
+MATCH (u:Utilisateur {prénom:"Hicham"}), (uu:Utilisateur {prénom:"Francois"})
+MERGE (u)-[:connait]->(uu)
+MERGE (uu)-[:connait]->(u)
+
+MATCH (u:Utilisateur {prénom:"Hicham"}), (uu:Utilisateur {prénom:"Pingjie"}), (uuu:Utilisateur {prénom:"Yang"})
+MERGE (u)-[:connait]->(uu)
+MERGE (uu)-[:connait]->(u)
+MERGE (u)-[:connait]->(uuu)
+MERGE (uuu)-[:connait]->(u)
+MERGE (uu)-[:connait]->(uuu)
+MERGE (uuu)-[:connait]->(uu)
+
+MATCH (u:Utilisateur {prénom:"Gareth"}), (uu:Utilisateur {prénom:"Pingjie"})
+MERGE (u)-[:connait]->(uu)
+
+
+    # Requêtes de recherche d'entreprise par nom : 
+    
+match (e:Entreprise {nom:"Wordline"}) return e
+match (e:Entreprise {nom:"AMARIS"}) return e
+
+    # Requête de recherche des utilisateurs qui connaissent les connaissances de l'utilisateur "Hicham"
+    # Les connaissances de "Hicham" sont : Pingjie, Yang, Leo, Francois
+    # Les utilisateurs qui connaissent ces personnes sont : 
+
+		# Pingjie et Yang (connaissance mutuelle) 
+		# et Gareth (connait Pingjie) 
+		# et Hicham (car il les connaisent aussi)
+    
+    ### Voici la requête
+
+match (u:Utilisateur {prénom:"Hicham"})-[:connait]->(n:Utilisateur)
+match (r:Utilisateur)-[:connait]->(n) return r;
+
+    # Pour enlever "Hicham" du résultat
+
+
+match (u:Utilisateur {prénom:"Hicham"})-[:connait]->(n:Utilisateur)
+match (r:Utilisateur)-[:connait]->(n) where r.prénom<>"Hicham" return r
+
+
+    # On peut substituer "Hicham" avec l'utilisateur qu'on veut pour connaitre qui connait ses connaissances
+    # Requête de recherche des utilisateurs ayant travaillés en même temps que "Daniel" chez "AMARIS"
+    # Selon notre compréhension, il faut avoir une intersection entre la période de "Mad" et les autres 
+    # utilisateurs qui travaillent chez "AMARIS". Ce qui fait que nous allons comparer les dates d'entrée et sortie.
+    # Soit la période travaillée par "Daniel" [atp1.du, atp1.au] et la periode d'un autre utilisateur [atp2.du, atp2.au]
+
+
+match (a:Utilisateur {prénom:"Mad"})-[atp1:aTravailléPour]->(e:Entreprise {nom:"AMARIS"})
+match (u:Utilisateur)-[atp2:aTravailléPour]->(e)
+where (atp1.du <= atp2.du and atp2.du <= atp1.au) or (atp1.du <= atp2.au and atp2.au <= atp1.au)
+return u;
