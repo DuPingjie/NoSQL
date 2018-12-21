@@ -15,8 +15,8 @@ import redis.clients.jedis.SortingParams;
 
 public class RedisClient {
 	
-	// Configuration of the connection
-	private Jedis jedis;
+    // Configuration of the connection
+    private Jedis jedis;
     private JedisPool jedisPool;
     private ShardedJedis shardedJedis;
     private ShardedJedisPool shardedJedisPool;
@@ -148,7 +148,7 @@ public class RedisClient {
         	}
         }
         System.out.println();
-        System.out.println("======================Calls being trated======================");
+        System.out.println("======================Calls being treated=====================");
         for (int i=1;i<=n;i++) {
         	String call="call"+String.valueOf(i);
         	String status=shardedJedis.hget(call,"status");
@@ -167,7 +167,7 @@ public class RedisClient {
         System.out.println();
                
         // 5. Print all the calls being treated by each operator 
-        System.out.println("=======Calls calls being treated and its operator's name======");
+        System.out.println("=========Calls being treated and its operator's name==========");
         for (int i=1;i<=n;i++) {
         	String call="call"+String.valueOf(i);
         	String status=shardedJedis.hget(call,"status");
