@@ -1,6 +1,6 @@
 Projet NoSQL : Redis
 
-Nous avons Simule un call center avec Redis en JAVA :
+Nous avons Simulé un call center avec Redis en JAVA :
 
 Appels avec certaines propriétés
   Identifiant
@@ -17,7 +17,7 @@ Opérateurs avec certaines propriétés
   Prénom
   
 Fonctiones and results od the code : 
-1. Ajout du nouvel appel et d'operateur
+1. Ajout du nouvel appel et d'opérateur
 
 ===========================Calls==============================
 call1：[1, 15:15, 0666666668, finished, 100s, i want eating., 2]
@@ -47,7 +47,7 @@ call3：[3, 21:01, 0666559968, treating, 110s, How are you?, 1]
 
 4. Ensemble des appels en cours de traitement, par opérateur
 
-=======Calls calls being treated and its operator's name======
+=========Calls being treated and its operator's name==========
 call2[2, 18:55, 0666556668, treating, 250s, i'd like to meet Mr.Wang., 2] operator name : Rose
 call3[3, 21:01, 0666559968, treating, 110s, How are you?, 1] operator name : Jack
 
