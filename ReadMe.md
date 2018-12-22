@@ -1,6 +1,6 @@
 Projets de NoSQL : 
 1. MongoDB (en Java)
-2. Redis (en Java1)
+2. Redis (en Java)
 3. CassandraDB (en script)
 4. Neo4J (en script)
 
